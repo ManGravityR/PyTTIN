@@ -106,8 +106,12 @@ mappings = {
 
 assistant = GenericAssistant('intents.json', intent_methods=mappings)
 assistant.train_model()
-assistant.load_model(model_name='models/todos')
-assistant.save_model(model_name='models/todos')
+
+# Load saved models
+#assistant.load_model(model_name='models/todos')
+
+# Save models
+#assistant.save_model(model_name='models/todos')
 
 while True:
     try:
