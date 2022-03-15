@@ -27,31 +27,33 @@ recognizer = speech_recognition.Recognizer()
 
 
 def speech():
-    with speech_recognition.Microphone() as mic:
-        recognize_text = ''
+    """Speech function"""
 
-        # Button pressed and mic listen
-        txt_label.configure(text=defaults["label"]["listen"])
-        button_rec.configure(text=defaults["button"]["stop"])
-        window.update()
+    try:
+        with speech_recognition.Microphone() as mic:
+            recognize_text = ''
 
-        try:
+            # Button pressed and mic listen
+            txt_label.configure(text=defaults["label"]["listen"])
+            button_rec.configure(text=defaults["button"]["stop"])
+            window.update()
+
             recognizer.adjust_for_ambient_noise(mic, duration=0.2)
             audio = recognizer.listen(mic, timeout=7, phrase_time_limit=10)
             recognize_text = recognizer.recognize_google(audio, language='ru-RU')
 
-        except (speech_recognition.WaitTimeoutError, speech_recognition.UnknownValueError):
-            button_rec.configure(text=defaults["button"]["start"])
-            txt_label.configure(text=defaults["label"]["not_exceed"])
-            window.update()
-            return
+    except (speech_recognition.WaitTimeoutError, speech_recognition.UnknownValueError):
+        button_rec.configure(text=defaults["button"]["start"])
+        txt_label.configure(text=defaults["label"]["not_exceed"])
+        window.update()
+        return
 
-        else:
-            # Reset state
-            txt_label.configure(text=defaults["label"]["wait"])
-            button_rec.configure(text=defaults["button"]["start"])
+    else:
+        # Reset state
+        txt_label.configure(text=defaults["label"]["wait"])
+        button_rec.configure(text=defaults["button"]["start"])
 
-            return recognize_text.capitalize()
+        return recognize_text.capitalize()
 
 
 def insert_record():
