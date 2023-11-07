@@ -1,4 +1,4 @@
-from neuralintents import GenericAssistant
+from neuralintents import BasicAssistant
 import speech_recognition
 import pyttsx3 as tts
 import sys
@@ -18,28 +18,29 @@ def create_note():
     speaker.say("What do you want to write onto your note?")
     speaker.runAndWait()
 
-    done = False
-    while not done:
+    complete = False
+    while not complete:
         try:
             with speech_recognition.Microphone() as mic:
                 recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-                audio = recognizer.listen(mic)
+                audio_input = recognizer.listen(mic)
 
-                note = recognizer.recognize_google(audio)
+                note = recognizer.recognize_google(audio_input)
                 note = note.lower()
 
-                speaker.say("Choose a filename!")
+                speaker.say("What should we name the file?")
                 speaker.runAndWait()
 
                 recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-                audio = recognizer.listen(mic)
+                audio_input = recognizer.listen(mic)
 
-                filename = recognizer.recognize_google(audio)
+                filename = recognizer.recognize_google(audio_input)
                 filename = filename.lower()
 
             with open(f"{filename}", 'w') as f:
+                complete = True
+
                 f.write(note)
-                done = True
                 speaker.say(f"I successfully created the note {filename}")
                 speaker.runAndWait()
 
@@ -55,18 +56,18 @@ def add_todo():
     speaker.say("What todo do you want to add?")
     speaker.runAndWait()
 
-    done = False
-    while not done:
+    complete = False
+    while not complete:
         try:
             with speech_recognition.Microphone() as mic:
                 recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-                audio = recognizer.listen(mic)
+                audio_input = recognizer.listen(mic)
 
-                item = recognizer.recognize_google(audio)
+                item = recognizer.recognize_google(audio_input)
                 item = item.lower()
 
                 todo_list.append(item)
-                done = True
+                complete = True
 
                 speaker.say(f"I added {item} to the to do list!")
                 speaker.runAndWait()
@@ -104,24 +105,32 @@ mappings = {
     "exit": exit
 }
 
-assistant = GenericAssistant('intents.json', intent_methods=mappings)
-assistant.train_model()
+assistant = BasicAssistant('intents.json', method_mappings=mappings)
+assistant.fit_model(epochs=50)
+assistant.save_model()
 
 # Load saved models
-#assistant.load_model(model_name='models/todos')
+# assistant.load_model(model_name='models/todos')
 
 # Save models
-#assistant.save_model(model_name='models/todos')
+# assistant.save_model(model_name='models/todos')
 
-while True:
+complete = False
+
+while not complete:
     try:
         with speech_recognition.Microphone() as mic:
             recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-            audio = recognizer.listen(mic)
+            audio_input = recognizer.listen(mic)
 
-            message = recognizer.recognize_google(audio)
+            message = recognizer.recognize_google(audio_input)
             message = message.lower()
 
-        assistant.request(message)
+            if message == "stop":
+                complete = True
+
+        assistant.process_input(message)
+        print(assistant.process_input(message))
+
     except speech_recognition.UnknownValueError:
         recognizer = speech_recognition.Recognizer()
