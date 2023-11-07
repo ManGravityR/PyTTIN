@@ -1,2 +1,5 @@
 /models/*
 .idea
+/venv/
+/venv-3.12/
+src

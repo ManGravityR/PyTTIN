@@ -1,6 +1,12 @@
-# Python TTY Voice Recognition
+Python TTY Voice Recognition
+============================
 
-## Speech to text
+Requirements
+===========
+Python >=3.9
+
+Speech to text
+===========
 
 Output your voice to console (Terminal)
 
@@ -12,7 +18,8 @@ Output your voice to console (Terminal)
     <li>Reverse text voicing from audio</li>
 </ol>
 
-## Neural Assistant
+Neural Assistant
+===========
 
 Simple to do list for learn
 
@@ -24,7 +31,8 @@ Simple to do list for learn
     <li>Save audio as .mp3</li>
 </ol>
 
-## Window Recorder
+Window Recorder
+===========
 
 Open window (Tkinter) with Record button
 
